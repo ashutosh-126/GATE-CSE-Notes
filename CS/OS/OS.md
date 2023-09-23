@@ -26,6 +26,7 @@ In this Operating System an **operator** sorts the jobs into various batches bas
 - Hard to debug
 - Costly
 - Jobs can wait unlimitedly (hence they fail)
+
 ![](https://media.geeksforgeeks.org/wp-content/uploads/20230511130815/types1-(1).webp)
 
 ## Multi-Programming System
@@ -193,6 +194,9 @@ Types:
 - Co-ordination between Other Software and Users
 - Performs basic Computer Tasks
 
+### Degree of Multiprogramming 
+The number of processes that can reside in the ready state at maximum decides the degree of multiprogramming, e.g., if the degree of programming = 100, this means 100 processes can reside in the ready state at maximum.
+
 ### <ins>Microkernel</ins>
 
 A microkernel is a type of operating system kernel that is designed to provide only the most basic services required for an operating system to function such as:
@@ -302,6 +306,24 @@ Inter-Process Communication (IPC)|Uses message passing or shared memory for IPC|
 
 !!! I dont know which one actually does round robin here
 
+**Multitasking Programming** has Two Types: 
+
+- Process-based Multitasking
+- Thread-based Multitasking
+
+|Process-Based Multitasking|Thread-Based Multitasking|
+|-|-|
+In process-based multitasking, two or more processes and programs can be run concurrently.|In thread-based multitasking, two or more threads can be run concurrently.
+In process-based multitasking, a process or a program is the smallest unit.|In thread-based multitasking, a thread is the smallest unit.
+The program is a bigger unit.|Thread is a smaller unit.
+Process-based multitasking requires more overhead.|Thread-based multitasking requires less overhead.
+The process requires its own address space.|Threads share the same address space.
+The process to Process communication is expensive.|Thread to Thread communication is not expensive.
+Here, it is unable to gain access over the idle time of the CPU.|It allows taking gain access over idle time taken by the CPU.
+It is a comparatively heavyweight.|It is comparatively lightweight.
+It has a faster data rate for multi-tasking because two or more processes/programs can be run simultaneously.|It has a comparatively slower data rate multi-tasking.
+Example: We can listen to music and browse the internet at the same time. The processes in this example are the music player and browser. |Example: Using a browser we can navigate through the webpage and at the same time download a file. In this example, navigation is one thread, and downloading is another thread. Also in a word-processing application like MS Word, we can type text in one thread, and spell checker checks for mistakes in another thread.
+
 ### Types of Memory
 
 Primary Memory:
@@ -385,7 +407,7 @@ Chip Size:
 
 When a system boots, BIOS first performs POST(Power on self test) to check if everything works fine
 
-## Processes and threads
+## Threads
 
 |S. No.|Parameters|User Level Thread|Kernel Level Thread|
 |-|-|-|-|
@@ -437,23 +459,21 @@ These are the basic components of the Operating System.
 - Register Set
 - Program Counter
 
-Multitasking Programming has Two Types: 
+Multi threading
+- It is a process of multiple threads executes at same time.
 
-- Process-based Multitasking
-- Thread-based Multitasking
+Benefits
+- Responsiveness
+- Resource Sharing
+    - Message Passing
+    - Shared Memory
+- Economy : since they share same memory among themselves it is lesser costly
+- Scalability
+- Better Communication System
+- Microprocessor utilization
 
-|Process-Based Multitasking|Thread-Based Multitasking|
-|-|-|
-In process-based multitasking, two or more processes and programs can be run concurrently.|In thread-based multitasking, two or more threads can be run concurrently.
-In process-based multitasking, a process or a program is the smallest unit.|In thread-based multitasking, a thread is the smallest unit.
-The program is a bigger unit.|Thread is a smaller unit.
-Process-based multitasking requires more overhead.|Thread-based multitasking requires less overhead.
-The process requires its own address space.|Threads share the same address space.
-The process to Process communication is expensive.|Thread to Thread communication is not expensive.
-Here, it is unable to gain access over the idle time of the CPU.|It allows taking gain access over idle time taken by the CPU.
-It is a comparatively heavyweight.|It is comparatively lightweight.
-It has a faster data rate for multi-tasking because two or more processes/programs can be run simultaneously.|It has a comparatively slower data rate multi-tasking.
-Example: We can listen to music and browse the internet at the same time. The processes in this example are the music player and browser. |Example: Using a browser we can navigate through the webpage and at the same time download a file. In this example, navigation is one thread, and downloading is another thread. Also in a word-processing application like MS Word, we can type text in one thread, and spell checker checks for mistakes in another thread. 
+
+ 
 
 Playing with threads
 
@@ -462,37 +482,174 @@ Fork in a loop will always make 2^n-1 children, dont forget the first process is
 
 [exec()](https://www.geeksforgeeks.org/difference-fork-exec/)
 
+## Processes 
+
+A process is an ‘active’ entity instead of a program, which is considered a ‘passive’ entity.
+
+Process in memory
+
+![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/gq/2015/06/process.png)
+
+A typical memory representation of a C program consists of the following sections.
+
+1. Text segment  (i.e. instructions)
+    - contains executable instructions
+    - placed below heap or stack to to avoid overwritting when stack and heap overflows
+    - Sharable
+    - ReadOnly 
+2. Initialized data segment 
+    - contains the global variables and static variables that are initialized by the programmer
+    - initialized read-only area(direct initialized data) and the initialized read-write area(pointers to pick data from)
+3. Uninitialized data segment  (bss)
+    - block started by symbol
+    - takes care of uninitialized variables
+4. Stack 
+    - LIFO structure
+    - Automatic variables are stored, along with information that is saved each time a function is called.
+    - Each time a function is called, the address of where to return to and certain information about the caller’s environment
+    - we can now see why the stackoverflows after many recursive calls
+    - The set of values pushed for one function call is termed a “stack frame”; A stack frame consists at minimum of a return address.
+    - Each time a recursive function calls itself, a new stack frame is used, so one set of variables doesn’t interfere with the variables from another instance of the function.
+5. Heap 
+    - shared by all shared libraries and dynamically loaded modules in a process.
+    - resizeable based on requirement
+
+### Attributes or Characteristics of a Process
+A process has the following attributes.
+
+- Process Id:    A unique identifier assigned by the operating system
+- Process State: Can be ready, running, etc.
+- CPU registers: Like the Program Counter (CPU registers must be saved and restored when a process is swapped in and out of the CPU)
+- Accounts information: Amount of CPU used for process execution, time limits, execution ID, etc
+- I/O status information: For example, devices allocated to the process, open files, etc
+- CPU scheduling information: For example, Priority (Different processes may have different priorities, for example, a shorter process assigned high priority in the shortest job first scheduling)
+
+And a PCB contains
+- Process ID
+- Process Status
+- CPU Registers
+- Memory Management Info
+
+### States of Process
+A process is in one of the following states: 
+
+
+- New: Newly Created Process (or) being-created process.
+- Ready
+- Run: Currently running process in CPU (only one process at a time can be under execution in a single processor)
+- Wait (or Block): When a process requests I/O access.
+- Complete (or Terminated)
+- Suspended Ready: When the ready queue becomes full, some processes are moved to a suspended ready state
+- Suspended Block: When the waiting queue becomes full.
+
+![](https://media.geeksforgeeks.org/wp-content/cdn-uploads/gq/2015/06/process-states1.png)
+![](https://media.geeksforgeeks.org/wp-content/uploads/20190604122001/states_modified.png)
+
+### Context Switch
+
+Context switching in an operating system involves saving the context or state of a running process so that it can be restored later, and then loading the context or state of another. process and run it.
+
+While a process is running other processes with high priority queue up to use CPU to complete their job.
+
+3 ways to do it
+
+1. Interrupts 
+2. Multitasking
+3. User/Kernel switch
+
+These are the following steps.
+- When the operating system decides to switch to another process, it stores the current process in the circuit’s memory, including CPU registers and program counters. 
+- It then loads PCB's program counter then loads the chip to start the next process, resets its state and resumes execution from where it left off. 
+- This seamless switching between processes allows the operating system to create the illusion of simultaneous execution, even though the processor can only run one process at a time.
+
+⠀
+
+⠀
+**Process scheduling** is the activity of the process manager that handles the removal of the running process from the CPU and the selection of another process on the basis of a particular strategy.
+
+|Long Term Scheduler|Short term schedular|Medium Term Scheduler|
+|-|-|-|
+It is a job scheduler|It is a CPU scheduler|It is a process-swapping scheduler.
+Generally, Speed is lesser than short term scheduler|Speed is the fastest among all of them.|Speed lies in between both short and long-term schedulers.
+It controls the degree of multiprogramming|It gives less control over how much multiprogramming is done.|It reduces the degree of multiprogramming.
+It is barely present or nonexistent in the time-sharing system.|It is a minimal time-sharing system.|It is a component of systems for time sharing.
+It can re-enter the process into memory, allowing for the continuation of execution.|It selects those processes which are ready to execute|It can re-introduce the process into memory and execution can be continued.
+
+
+## <ins>[CPU SCHEDULING](https://www.geeksforgeeks.org/cpu-scheduling-in-operating-systems/)
+
+Non Preemptive:
+
+FCFS,  SJF, LJFS, MLQ, MFLQ, Priority non-preemptive
+
+Preemptive:
+
+LRTF, SRTF, RR, Priority preemptive
+
+---
+
+FCFS: First Come First Serve
+- suffers the [convoy effect](https://www.geeksforgeeks.org/convoy-effect-operating-systems/)
+
+SJF: Shortest Job First
+
+LJF: Longest Job First
+
+RR: Round Robin
+
+SRTF: Shortest Remaining Time First
+
+LRTF: Longest Remaining Time First
+
+MLQ: Multi Level Queue
+
+MFLQ: Multi Feedback Queue
+
+HRRN: Highest Response Ratio Next
+- Very optimal, higher priority to high response ratio
+- response ratio = (W+S)/S
+- W = Waiting time, S = Burst Time
+
+---
+
+If a process occurs starvation(does not get a chance to process), we can solve it by aging technique.
+
+Basically as the age of processes increase start giving them a higher priority as they grow.
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+|Algorithm          |Allocation is| Complexity |Average waiting time (AWT) |Preemption| Starvation |Performance|
+|-|-|-|-|-|-|-
+FCFS|According to the arrival time of the processes, the CPU is allocated. |Simple and easy to implement |Large.| No|No |Slow performance
+SJF |Based on the lowest CPU burst time  (BT). |More complex than FCFS|Smaller than FCFS|No|Yes|Minimum Average Waiting Time
+LJFS |Based on the highest CPU burst time (BT)|More complex than FCFS|Depending on some measures e.g., arrival time, process size, etc. |No|Yes|Big turn-around time|
+LRTF|Same as LJFS the allocation of the CPU is based on the highest CPU  burst time (BT). But it is preemptive|More complex than FCFS| Depending on some measures e.g., arrival time, process size, etc. |Yes |Yes |The preference is given to the longer jobs
+SRTF|Same as SJF the allocation of the CPU is based on the lowest CPU burst time (BT). But it is preemptive.|More complex than FCFS |Depending on some measures e.g., arrival time, process size, etc|Yes|Yes| The preference is given to the short jobs
+RR|According to the order of the process arrives with fixed time quantum (TQ) |The complexity depends on Time Quantum size|Large as compared to SJF and Priority scheduling.| Yes |No| Each process has given a fairly fixed time|
+Priority Pre-emptive |According to the priority. The bigger priority task executes first |This type is less complex |Smaller than FCFS|Yes|Yes|Well performance but contain a starvation problem|Priority non-preemptive |According to the priority with monitoring the new incoming higher priority jobs|This type is less complex than Priority preemptive|Preemptive Smaller than FCFS| No |Yes |Most beneficial with batch systems|
+MLQ |According to the process that resides in the bigger queue priority |More complex than the priority scheduling algorithms|Smaller than FCFS|No| Yes| Good performance but contain a starvation problem|
+MFLQ |According to the process of a bigger priority queue. |It is the most Complex but its complexity rate depends on the TQ size |Smaller than all scheduling types in many cases| No| No| Good performance|
 
 
 # TOPICS TO BE EXPLORED
 
 
 interrupt service routine
+
 INTERRUPTS
+
 SPOOLING
+
 SPOOLED DEVICE
+
 Rest of processes and threads then cpu scheduling
+
+[RPC](https://www.geeksforgeeks.org/remote-procedure-call-rpc-in-operating-system/)
+
+Zombie processes and orphans
+
+[Belady's Anomaly](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)
 
 # GATE TIPS
 
-always read if it's True or False statements that they are asking for
-
-# Formula sheet
-do it
+- always read if it's True or False statements that they are asking for
