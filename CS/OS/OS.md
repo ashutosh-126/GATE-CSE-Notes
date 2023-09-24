@@ -802,12 +802,58 @@ P(wait) always decreases semaphore by 1
 
 V(signal) always increases semaphore by 1
 
-⠀
-⠀
+# Deadlocks
+A deadlock is a situation where a set of processes are blocked because each process is holding a resource and waiting for another resource acquired by some other process. 
 
-⠀
-⠀
+We can deal with deadlocks by 2 ways:
+- Prevention and Avoidance
+- Detection and Recovery
 
+### Prevention
+The deadlock has the following characteristics:
+
+- Mutual Exclusion
+- Hold and Wait
+- No preemption
+- Circular wait
+
+**Deadlock Prevention**: We can prevent a Deadlock by eliminating any of the above four conditions. 
+⠀
+**Deadlock Detection** Algorithm: is of two types:
+- Wait-for-Graph Algorithm (Single Instance)
+- Banker’s Algorithm (Multiple Instance)
+⠀
+# DO BANKERS'S ALGORITHM HERE AND ADD TO FORMULA SHEET
+
+[Wait for Graph Algorithm](https://www.geeksforgeeks.org/wait-for-graph-deadlock-detection-in-distributed-system/)
+
+# DO [RAG](https://www.geeksforgeeks.org/resource-allocation-graph-rag-in-operating-system/)
+
+
+There are two Resource allocation techniques:
+
+     1. Resource partitioning approach – In this approach, the operating system decides beforehand, that what resources should be allocated to which user program. It divides the resources in the system to many resource partitions, where each partition may include various resources – for example, 1 MB memory, disk blocks, and a printer. Then, it allocates one resource partition to each user program before the program’s initiation. A resource table records the resource partition and its current allocation status (Allocated or Free). 
+
+          Advantages:
+            Easy to Implement
+            Less Overhead
+            Disadvantages:
+            Lacks flexibility – if a resource partition contains more resources than what a particular process requires, the additional resources are wasted.
+If a program needs more resources than a single resource partition, it cannot execute (Though free resources are present in other partitions).
+
+     2. Pool based approach – In this approach, there is a common pool of resources. The operating System checks the allocation status in the resource table whenever a program makes a request for a resource. If the resource is free, it allocates the resource to the program. 
+
+            Advantages:
+                Allocated resources are not wasted.
+                Any resource requirement can be fulfilled if the resource is free (unlike Partitioning approach)
+            Disadvantages:
+                Overhead of allocating and de-allocating the resources on every request and release.
+
+
+
+[Deadlock detection in distributed systems ](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems/)
+
+[one more](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems-2/)
 ⠀
 ⠀
 
@@ -874,6 +920,8 @@ Rest of processes and threads then cpu scheduling
 Zombie processes and orphans
 
 [Belady's Anomaly](https://www.geeksforgeeks.org/beladys-anomaly-in-page-replacement-algorithms/)
+
+Add other problems similar to consumer and producer
 
 # GATE TIPS
 
