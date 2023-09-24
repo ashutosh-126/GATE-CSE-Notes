@@ -433,6 +433,8 @@ Simply put, kernel threads are independent of each other, slow, more time to swi
 
 Threads can share the Code segments(Because they are threads afterall). They have only separate Registers and stack.
 
+They also share the same virtual address space as the process.
+
 OS does not maintain virtual memory space for each individual threads.
 
 |S.NO|Process|Thread|
@@ -630,11 +632,234 @@ Priority Pre-emptive |According to the priority. The bigger priority task execut
 MLQ |According to the process that resides in the bigger queue priority |More complex than the priority scheduling algorithms|Smaller than FCFS|No| Yes| Good performance but contain a starvation problem|
 MFLQ |According to the process of a bigger priority queue. |It is the most Complex but its complexity rate depends on the TQ size |Smaller than all scheduling types in many cases| No| No| Good performance|
 
+For questions generically related to these, dont forget new processes are allowed to barge in before we reach another certain process(causing starvation)
+
+# Process Synchronization
+
+There are two types of processess:
+1. Independent
+2. Cooperative
+
+**Process Synchronization** is the coordination of execution of multiple processes in a multi-process system to ensure that they access shared resources in a controlled and predictable manner. It aims to resolve the problem of race conditions and other synchronization issues in a concurrent system.
+
+Clearly we can only synchronize Cooperative processess.
+
+**Race condition** occurs when multiple threads read and write the same variable i.e. they have access to some shared data and they try to change it at the same time. 
+
+In such a scenario threads are “racing” each other to access/change the data.
+
+So we can have many processes fight for the same resource at the same time. 
+
+When this happens in code, they have entered critical section where only 1 processes is then allowed to access the resource.
+
+But there is a critical section problem, where problems like starvation and deadlocks might occur.
+
+### How can we fix this?
+
+- **Mutual Exclusion**
+    - If a process is executing in its critical section, then no other process is allowed to execute in the critical section.
+- **Progress**
+    - If no process is executing in the critical section and other processes are waiting outside the critical section, then only those processes that are not executing in their remainder section can participate in deciding which will enter in the critical section next, and the selection can not be postponed indefinitely.
+- **Bounded Waiting**
+    - A bound must exist on the number of times that other processes are allowed to enter their critical sections after a process has made a request to enter its critical section and before that request is granted.
+
+![](https://www.geeksforgeeks.org/wp-content/uploads/gq/2015/06/critical-section-problem.png)
+
+### Peterson's Solution
+
+In Peterson’s solution, we have two shared variables:
+
+- boolean flag[i]: Initialized to FALSE, initially no one is interested in entering the critical section
+- int turn: The process whose turn is to enter the critical section.
+
+![](https://www.geeksforgeeks.org/wp-content/uploads/gq/2015/06/peterson.png)
+
+Advantages: Preserves all 3 conditions
+
+Disadvantages: Busy Waiting
+
+
+### Interprocess communication
+
+We know that cooperative process communicate with each other while processing.
+
+This is how:
+- **Pipes**: A pipe is a unidirectional communication channel used for IPC between two related processes. One process writes to the pipe, and the other process reads from it.
+- **Message Queues**: Message queues are used to send and receive messages between processes. They can be used for both one-to-one and one-to-many communication.
+- **Shared Memory**: Shared memory is a technique where multiple processes can access the same region of memory. This allows for high-speed communication between processes.
+- **Semaphores**: Semaphores are used for controlling access to shared resources. They are used to prevent multiple processes from accessing the same resource simultaneously, which can lead to data corruption.
+- **Sockets**: Sockets are used for network communication between processes running on different hosts. They provide a standard interface for communication, which can be used across different platforms and programming languages.
+
+S.No|Shared Memory Model|Message Passing Model
+|-|-|-|
+1.|The shared memory region is used for communication.|A message passing facility is used for communication.
+2.|It is used for communication between processes on a single processor or multiprocessor systems where the communicating processes reside on the same machine as the communicating processes share a common address space.|It is typically used in a distributed environment where communicating processes reside on remote machines connected through a network.
+3.|The code for reading and writing the data from the shared memory should be written explicitly by the Application programmer.|No such code required here as the message passing facility provides mechanism for communication and synchronization of actions performed by the communicating processes.
+4.|It provides a maximum speed of computation as communication is done through shared memory so system calls are made only to establish the shared memory.|It is time-consuming as message passing is implemented through kernel intervention (system calls).
+5.|Here the processes need to ensure that they are not writing to the same location simultaneously.|It is useful for sharing small amounts of data as conflicts need not to be resolved.
+6.|Faster communication strategy.|Relatively slower communication strategy.
+7.|No kernel intervention.|It involves kernel intervention.
+8.|It can be used in exchanging larger amounts of data. |It can be used in exchanging small amounts of data.
+9.|Data from a client process may need to be transferred to a server process for modification before being returned to the client.|Web browsers, Web Servers, Chat program on WWW (World Wide Web)
+
+**Shared memory method**
+
+Producer-Consumer problem:
+
+The are two processes, consumer and producer.
+
+Both of them share common space or memory known as buffer where the item produced by producer is stored and from which the consumer consumes when needed.
+
+This can generate another problem called the bounded buffer problem where the buffer is filled by the items produced by producer and then is no where for other produced items to go.
+
+Hence producer stop producing once the buffer is full.
+
+**Message Passing method**
+
+- establish communication link
+- start exchaning using basic primitives like send and recieve
+
+A standard message can have two parts: header and body. 
+
+The **header part** is used for storing message type, destination id, source id, message length, and control information. 
+
+The control information contains information like what to do if runs out of buffer space, sequence number, priority. 
+
+Generally, message is sent using FIFO style.
+
+A link has some capacity that determines the number of messages that can reside in it temporarily for which every link has a queue associated with it which can be of zero capacity, bounded capacity, or unbounded capacity.
+
+1. Zero capacity – no messages are queued on a link.
+Sender must wait for receiver (rendezvous)
+2. Bounded capacity – finite length of n messages
+Sender must wait if link full
+3. Unbounded capacity – infinite length
+Sender never waits
+
+**Direct Communication** links are implemented when the processes use a specific process identifier for the communication, but it is hard to identify the sender ahead of time. 
+
+**In-direct Communication** is done via a shared mailbox (port), which consists of a queue of messages. The sender keeps the message in mailbox and the receiver picks them up.
+
+There are a few synchronization algorithms:
+
+1. Mutex Locks:
+2. Semaphores
+3. Counting semaphores
+4. Binary Semaphores
+5. Counting semaphores
+
+### Mutex Locks
+
+Mutex is a specific kind of binary semaphore that is used to provide a locking mechanism. 
+
+Mutex uses a priority inheritance mechanism to avoid priority inversion issues. The priority inheritance mechanism keeps higher-priority processes in the blocked state for the minimum possible time. However, this cannot avoid the priority inversion problem, but it can reduce its effect up to an extent. 
+
+### Advantages of Mutex
+- No race condition arises, as only one process is in the critical section at a time.
+- Data remains consistent and it helps in maintaining integrity.
+- It’s a simple locking mechanism that can be obtained by a process before entering into a critical section and released while leaving the critical section.
+
+### Disadvantages of Mutex
+- If after entering into the critical section, the thread sleeps or gets preempted by a high-priority process, no other thread can enter into the critical section. This can lead to starvation.
+- When the previous thread leaves the critical section, then only other processes can enter into it, there is no other mechanism to lock or unlock the critical section.
+- Implementation of mutex can lead to busy waiting that leads to the wastage of the CPU cycle.
+
+⠀[Priority Inversion and solving it](https://www.geeksforgeeks.org/difference-between-priority-inversion-and-priority-inheritance/)
+
+### Semaphore
+A semaphore is a non-negative integer variable that is shared between various threads. Semaphore works upon signaling mechanism, in this a thread can be signaled by another thread. Semaphore uses two atomic operations for process synchronisation: 
+
+Wait (P) and 
+Signal (V)
+
+### Advantages of Semaphore
+- Multiple threads can access the critical section at the same time.
+- Semaphores are machine-independent.
+- Only one process will access the critical section at a time, however, multiple threads are allowed.
+- Semaphores are machine-independent, so they should be run over microkernel.
+- Flexible resource management.
+### Disadvantages of Semaphore
+- It has priority inversion.
+- Semaphore’s operation (Wait, Signal) must be implemented in the correct manner to avoid deadlock.
+- It leads to a loss of modularity, so semaphores can’t be used for large-scale systems.
+- Semaphore is prone to programming error and this can lead to deadlock or violation of mutual exclusion property.
+- Operating System has to track all the calls to wait and signal operations.
+
+Mutex|Semaphore
+|-|-|
+A mutex is an object.|A semaphore is an integer.
+Mutex works upon the locking mechanism.|Semaphore uses signaling mechanism
+Operations on mutex: Lock and Unlock|Operation on semaphore: Wait and Signal
+Mutex doesn’t have any subtypes.|Semaphore is of two types:Counting and Binary
+A mutex can only be modified by the process that is requesting or releasing a resource.|Semaphore work with two atomic operations (Wait, signal) which can modify it.
+If the mutex is locked then the process needs to wait in the process queue, and mutex can only be accessed once the lock is released.|If the process needs a resource, and no resource is free. So, the process needs to perform a wait operation until the semaphore value is greater than zero. 
+
+Mutex locks can be both recursive and non-recursive
+- non-recursive: if a thread tries to acquire a lock that it already has, it wwill enter the waiting list of the resource and cause a deadlock
+- recursive allos relocking the resource recursively
+
+P(wait) always decreases semaphore by 1
+
+V(signal) always increases semaphore by 1
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+⠀
+
+⠀
+
 
 # TOPICS TO BE EXPLORED
 
 
-interrupt service routine
+interrupt service routine( ISR )
 
 INTERRUPTS
 
@@ -653,3 +878,4 @@ Zombie processes and orphans
 # GATE TIPS
 
 - always read if it's True or False statements that they are asking for
+- Always justify to yourself to why the other options arent the right ones

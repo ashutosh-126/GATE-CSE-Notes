@@ -18,6 +18,8 @@ Turn Around Time = Completion Time  –  Arrival Time
 
 Waiting Time = Turn Around Time  –  Burst Time
 
+Response time = Time at which the process gets the CPU for the first time - Arrival time
+
 ---
 
 Highest Response Ratio Next:
