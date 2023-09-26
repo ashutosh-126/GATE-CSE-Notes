@@ -832,35 +832,46 @@ The deadlock has the following characteristics:
 
 There are two Resource allocation techniques:
 
-     1. Resource partitioning approach – In this approach, the operating system decides beforehand, that what resources should be allocated to which user program. It divides the resources in the system to many resource partitions, where each partition may include various resources – for example, 1 MB memory, disk blocks, and a printer. Then, it allocates one resource partition to each user program before the program’s initiation. A resource table records the resource partition and its current allocation status (Allocated or Free). 
+ 1. Resource partitioning approach – In this approach, the operating system decides beforehand, that what resources should be allocated to which user program. It divides the resources in the system to many resource partitions, where each partition may include various resources – for example, 1 MB memory, disk blocks, and a printer. Then, it allocates one resource partition to each user program before the program’s initiation. A resource table records the resource partition and its current allocation status (Allocated or Free). 
 
-          Advantages:
-            Easy to Implement
-            Less Overhead
-            Disadvantages:
-            Lacks flexibility – if a resource partition contains more resources than what a particular process requires, the additional resources are wasted.
-If a program needs more resources than a single resource partition, it cannot execute (Though free resources are present in other partitions).
+Advantages:
+- Easy to Implement
+- Less Overhead
 
-     2. Pool based approach – In this approach, there is a common pool of resources. The operating System checks the allocation status in the resource table whenever a program makes a request for a resource. If the resource is free, it allocates the resource to the program. 
+Disadvantages:
+- Lacks flexibility – if a resource partition contains more resources than what a particular process requires, the additional resources are wasted.
+- If a program needs more resources than a single resource partition, it cannot execute (Though free resources are present in other partitions).
 
-            Advantages:
-                Allocated resources are not wasted.
-                Any resource requirement can be fulfilled if the resource is free (unlike Partitioning approach)
-            Disadvantages:
-                Overhead of allocating and de-allocating the resources on every request and release.
+ 2. Pool based approach – In this approach, there is a common pool of resources. The operating System checks the allocation status in the resource table whenever a program makes a request for a resource. If the resource is free, it allocates the resource to the program. 
 
+Advantages:
+- Allocated resources are not wasted.
+- Any resource requirement can be fulfilled if the resource is free (unlike Partitioning approach)
 
+Disadvantages:
+- Overhead of allocating and de-allocating the resources on every request and release.
 
-[Deadlock detection in distributed systems ](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems/)
+### [Banker's Algorithm](https://www.youtube.com/watch?v=7gMLNiEz3nw)
+Great yt video on it ⬆️
 
-[one more](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems-2/)
+[Deadlock detection in distributed systems](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems/)
+
+[One more](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems-2/)
 ⠀
-⠀
+# Memomry Management
 
-⠀
-⠀
+![](https://media.geeksforgeeks.org/wp-content/uploads/20230609020524/Memory-Hierarchy-Design.png)
 
-⠀
+Level|1|2|3|4
+|-|-|-|-|-
+Name|Register|Cache|Main Memory|Secondary Memory
+Size|    <1 KB|less than 16 MB|        <16GB|       >100 GB
+Implementation|Multi-ports|On-chip/SRAM|DRAM (capacitor memory)|    Magnetic
+Access Time | 0.25ns to 0.5ns|0.5 to 25ns|80ns  to 250ns|50 lakh ns
+Bandwidth|20000 to 1 lakh MB|5000 to 15000|1000 to 5000|20 to 150
+Managed by|Compiler|Hardware|Operating System |Operating System
+Backing Mechanism|From cache |from Main Memory|from Secondary Memory|from ie
+
 ⠀
 
 ⠀
