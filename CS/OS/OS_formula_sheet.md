@@ -27,3 +27,31 @@ Highest Response Ratio Next:
 response ratio = (W+S)/S
 
 Here, W is the waiting time of the process so far and S is the Burst time of the process.
+
+---
+# Page fault
+Effective Access time = (1-P)\*Memory Access Time + P\*(Page Fault Time)
+
+(You dont have to add extra Memory access time after page miss)
+
+---
+## Free page list
+Every free block has 1 address at the end which point to next free block in the free page list.
+
+---
+There is no relation between best,next,first and worst fit allocations. One can exist while the other can for certain situations.
+
+---
+# Always check bytes and bits
+$$ PageSize = PS$$
+$$Page Offset= log$$
+
+---
+In page-fault frequency strategy, process can exceed it's lower and upper bounds, but frames get removed and allocated respectively
+
+--- 
+# Do multi level paging questions
+
+Check global and local replacement algorithms
+
+---

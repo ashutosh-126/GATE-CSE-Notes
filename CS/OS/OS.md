@@ -827,6 +827,9 @@ The deadlock has the following characteristics:
 
 [Wait for Graph Algorithm](https://www.geeksforgeeks.org/wait-for-graph-deadlock-detection-in-distributed-system/)
 
+Wait for graph only makes an edge between 2 processes if they are directly dependent on each other.
+This graph does not contain resources.
+
 # DO [RAG](https://www.geeksforgeeks.org/resource-allocation-graph-rag-in-operating-system/)
 
 
@@ -858,7 +861,7 @@ Great yt video on it ⬆️
 
 [One more](https://www.geeksforgeeks.org/deadlock-detection-in-distributed-systems-2/)
 ⠀
-# Memomry Management
+# Memory Management
 
 ![](https://media.geeksforgeeks.org/wp-content/uploads/20230609020524/Memory-Hierarchy-Design.png)
 
@@ -872,19 +875,230 @@ Bandwidth|20000 to 1 lakh MB|5000 to 15000|1000 to 5000|20 to 150
 Managed by|Compiler|Hardware|Operating System |Operating System
 Backing Mechanism|From cache |from Main Memory|from Secondary Memory|from ie
 
+Two types of memory allocation:
+- Contiguous
+    - process memory comes together in contiguous form
+- Non-Contiguous
+    - process memory can be divided into a non-contiguous form
+
+### Static partitioning
+
+In fixed partitioning, memory is divided into fixed size chunks with each chunk being reserved for a specific process.
+
+### Advantages:
+- simple
+- no overhead
+- predictable
+- suitable for ssytems with fixed number of processes
+- good for batch processing
+- better control over memory allocation
+### Disadvantages:
+- Internal Fragmentation
+- External fragmentation
+- limit to the acceptable size of the process
+- number of the partitions>= number of processes
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/444-4.png)
+
+### Dynamic partitioning
+
+We can ,in memory, specifiy where our process goes in memory with no specific location. It tries to fit into the best memory hole that it finds.
+
+Different Partition Allocation methods are used in Contiguous memory allocations –
+
+- First Fit
+- Best Fit 
+- Worst Fit
+- Next Fit (resumes searching wrt to first fit from the curr element istead of start)
+⠀
+### Non-Contiguous memory allocation :
+Here the memory used by a process can be broken down into many parts consodering where it can fit in the holes of the memory.
+
+- Paging
+- Multilevel paging
+- Inverted paging
+- Segmentation
+- Segmented paging
+
+### MMU(Memory Management Unit) :
+The run time mapping between Virtual address and Physical Address is done by a hardware device known as MMU.
+
+Address binding is the process of mapping from one address space to another address space.
+
+An address binding can be done in three different ways :
+
+- Compile Time – 
+If you know that during compile time, where process will reside in memory, then an absolute address is generated. i.e The physical address is embedded to the executable of the program during compilation. Loading the executable as a process in memory is very fast. But if the generated address space is preoccupied by other processes, then the program crashes and it becomes necessary to recompile the program to change the address space.
+
+- Load time – 
+If it is not known at the compile time where the process will reside, then a relocatable address will be generated. The loader translates the relocatable address to an absolute address. The base address of the process in main memory is added to all logical addresses by the loader to generate an absolute address. In this, if the base address of the process changes, then we need to reload the process again.
+
+
+- Execution time – 
+The instructions are in memory and are being processed by the CPU. Additional memory may be allocated and/or deallocated at this time. This is used if a process can be moved from one memory to another during execution(dynamic linking-Linking that is done during load or run time). e.g – Compaction.
+
+The Memory Management Unit is a combination of 2 registers – 
+
+- Base Register(relocation register) – contains the starting physical address of the process.
+- Limit Register -mentions the limit relative to the base address on the region occupied by the process. 
+
+Base register value + logical address = physical address, given it is lesser than the value in the limit register.
+
+![](https://media.geeksforgeeks.org/wp-content/uploads/20210531165409/addresstranslation.jpg)
+
+Example:
+
+- If Logical Address = 31 bit, then Logical Address Space = 231 words = 2 G words (1 G = 230)
+- If Logical Address Space = 128 M words = 27 * 220 words, then Logical Address = log2 227 = 27 bits
+- If Physical Address = 22 bit, then Physical Address Space = 222 words = 4 M words (1 M = 220)
+- If Physical Address Space = 16 M words = 24 * 220 words, then Physical Address = log2 224 = 24 bits
+
+So a process's memory is broken down into pages of uniform size. And memory divides itself into frames of the same size as the page.
+
+As if fits for the process, the page sits in every frame it can.
+
+$$Physical Address = (Frame Number << Number Of Bits In Frame Offset) + Frame Offset$$
+
+### Translation Lookaside Buffer (TLB) in Paging
+For each process a Page table is created. 
+
+Where to keep the page table?
+1. Registers, super fast but size issue and cant keep track of a lot of page entries
+2. Main Memory, fixes size issue, but now needs 2 main memory references
+    - One to find frame number
+    - another to go to the address specified by the frame number
+
+To overcome this problem a high-speed cache is set up for page table entries called a **Translation Lookaside Buffer** (TLB). Translation Lookaside Buffer (TLB) is a special cache used to keep track of recently used transactions. TLB contains page table entries that have been most recently used.
+
+### Steps in TLB hit
+- CPU generates a virtual (logical) address. 
+- It is checked in TLB (present). 
+- The corresponding frame number is retrieved, which now tells where the main memory page lies. 
+### Steps in TLB miss
+- CPU generates a virtual (logical) address. 
+- It is checked in TLB (not present). 
+- Now the page number is matched to the page table residing in the main memory (assuming the page table contains all PTE). 
+- The corresponding frame number is retrieved, which now tells where the main memory page lies. 
+- The TLB is updated with new PTE (if space is not there, one of the replacement techniques comes into the picture i.e either FIFO, LRU or MFU etc). 
 ⠀
 
-⠀
-⠀
+Effective memory access time(EMAT)
+ TLB is used to reduce adequate memory access time as it is a high-speed associative cache. 
 
-⠀
-⠀
+$$EMAT = h*(c+m) + (1-h)*(c+2m) $$
 
-⠀
-⠀
+where, h = hit ratio of TLB 
+m = Memory access time 
+c = TLB access time
 
+- The TLB is associative, high-speed memory.
+- Each entry in TLB consists of two parts: a tag and a value.
+- When this memory is used, then an item is compared with all tags simultaneously. If the item is found, then the corresponding value is returned.
+
+## Multi Paging in OS
+
+### Advantages of Multilevel Paging in Operating Systems
+- **Reduced memory overhead**: Multilevel paging can help to reduce the memory overhead associated with the page table. This is because each level contains fewer entries, which means that less memory is required to store the page table.
+- **Faster page table lookup**: With a smaller number of entries per level, it takes less time to perform a page table lookup. This can lead to faster system performance overall.
+- **Flexibility**: Multilevel paging provides greater flexibility in terms of how the memory space is organized. This can be especially useful in systems with varying memory requirements, as it allows the page table to be adjusted to accommodate changing needs.
+### Disadvantages of Multilevel Paging in Operating Systems
+- **Increased complexity**: Multilevel paging adds complexity to the memory management system, which can make it more difficult to design, implement, and debug.
+- **Increased overhead**: Although multilevel paging can reduce the memory overhead associated with the page table, it can also increase the overhead associated with page table lookups. This is because each level must be traversed to find the desired page table entry.
+- **Fragmentation**: Multilevel paging can lead to fragmentation of the memory space, which can reduce overall system performance. This is because the page table entries may not be contiguous, which can result in additional overhead when accessing memory.
+
+Think os single paging as an array but multipaging as a binary search tree.
+
+DO THESE(MULTI PAGING) [PROBLEMS](https://www.geeksforgeeks.org/multilevel-paging-in-operating-system/)
+
+### Inverted Paging
+Instead of giving directions from logical memory to physical memory(because it takes some overhead to forward and connect to physical memory), this issue is solved by inverting the page table and placeing the entire physical address space on the table to directly see why memory location is available in the physical memory or not.
+
+### Segmentation
+Instead of having same sized pages for the processes, we can now have different sized segments for each process.
+
+### What is Segment Table?
+It maps a two-dimensional Logical address into a one-dimensional Physical address. It’s each table entry has:
+
+- Base Address: It contains the starting physical address where the segments reside in memory.
+- Segment Limit:  Also known as segment offset. It specifies the length of the segment.
+
+### Advantages of Segmentation in Operating System
+- No Internal fragmentation.
+- Segment Table consumes less space in comparison to Page table in paging.
+- As a complete module is loaded all at once, segmentation improves CPU utilization.
+- The user’s perception of physical memory is quite similar to segmentation. Users can divide user programs into modules via segmentation. These modules are nothing more than separate processes’ codes.
+- The user specifies the segment size, whereas, in paging, the hardware determines the page size.
+- Segmentation is a method that can be used to segregate data from security operations.
+- Flexibility: Segmentation provides a higher degree of flexibility than paging. Segments can be of variable size, and processes can be designed to have multiple segments, allowing for more fine-grained memory allocation.
+- Sharing: Segmentation allows for sharing of memory segments between processes. This can be useful for inter-process communication or for sharing code libraries.
+- Protection: Segmentation provides a level of protection between segments, preventing one process from accessing or modifying another process’s memory segment. This can help increase the security and stability of the system.
+### Disadvantages of Segmentation in Operating System
+- As processes are loaded and removed from the memory, the free memory space is broken into little pieces, causing External fragmentation.
+- Overhead is associated with keeping a segment table for each activity.
+- Due to the need for two memory accesses, one for the segment table and the other for main memory, access time to retrieve the instruction increases.
+- Fragmentation: As mentioned, segmentation can lead to external fragmentation as memory becomes divided into smaller segments. This can lead to wasted memory and decreased performance.
+- Overhead: Using a segment table can increase overhead and reduce performance. Each segment table entry requires additional memory, and accessing the table to retrieve memory locations can increase the time needed for memory operations.
+- Complexity: Segmentation can be more complex to implement and manage than paging. In particular, managing multiple segments per process can be challenging, and the potential for segmentation faults can increase as a result.⠀
+
+### Advantages of Segmented Paging
+
+- The page table size is reduced as pages are present only for data of segments, hence reducing the memory requirements.
+- Gives a programmers view along with the advantages of paging.
+- Reduces external fragmentation in comparison with segmentation.
+- Since the entire segment need not be swapped out, the swapping out into virtual memory becomes easier .
+### Disadvantages of Segmented Paging
+
+- Internal fragmentation still exists in pages.
+- Extra hardware is required
+- Translation becomes more sequential increasing the memory access time.
+- External fragmentation occurs because of varying sizes of page tables and varying sizes of segment tables in today’s systems.
 ⠀
-⠀
+### Advantages of Virtual Memory
+- More processes may be maintained in the main memory: Because we are going to load only some of the pages of any particular process, there is room for more processes. This leads to more efficient utilization of the processor because it is more likely that at least one of the more numerous processes will be in the ready state at any particular time.
+- A process may be larger than all of the main memory: One of the most fundamental restrictions in programming is lifted. A process larger than the main memory can be executed because of demand paging. The OS itself loads pages of a process in the main memory as required.
+- It allows greater multiprogramming levels by using less of the available (primary) memory for each process.
+- It has twice the capacity for addresses as main memory.
+- It makes it possible to run more applications at once.
+- Users are spared from having to add memory modules when RAM space runs out, and applications are liberated from shared memory management.
+- When only a portion of a program is required for execution, speed has increased.
+- is isolation has increased security.
+- It makes it possible for several larger applications to run at once.
+- Memory allocation is comparatively cheap.
+- It doesn’t require outside fragmentation.
+- It is efficient to manage logical partition workloads using the CPU.
+- Automatic data movement is possible.
+### Disadvantages of Virtual Memory
+- It can slow down the system performance, as data needs to be constantly transferred between the physical memory and the hard disk.
+- It can increase the risk of data loss or corruption, as data can be lost if the hard disk fails or if there is a power outage while data is being transferred to or from the hard disk.
+- It can increase the complexity of the memory management system, as the operating system needs to manage both physical and virtual memory.
+
+
+Let Main memory access time is: m
+Page fault service time is: s
+Page fault rate is : p
+
+Then, Effective memory access time = $$(p*s) + (1-p)*m$$
+
+Swapping is swapping the pages out of page table.
+
+**Thrashing is when OS spends more time swapping than performing the process.**
+
+Effective access time (EAT) = $$(1-p)* Memory Access Time + p * Page fault time.$$
+Page fault time = $$Page Fault Overhead + Swap Out + SwapIn +Restart Overhead$$
+
+### Page Replacement Algorithms
+- FIFO (first in first out)
+- LRU (Least recently used)
+- Optimal
+
+### Disk Scheduling
+
+- FCFS
+- SSTF (goes to the closest process)
+- SCAN (goes one direction and hits wall and rebounds, direction decided by the larger value)
+- C-SCAN (SCAN but circular so it comes back and starts from 0)
+- LOOK (no hitting wall)
+- C-LOOK (Look in a circular way)
 
 ⠀
 ⠀
