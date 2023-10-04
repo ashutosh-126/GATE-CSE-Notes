@@ -55,3 +55,7 @@ In page-fault frequency strategy, process can exceed it's lower and upper bounds
 Check global and local replacement algorithms
 
 ---
+# fork() and exec() and pids
+Threads have nothing to do with IPC
+
+---

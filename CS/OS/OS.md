@@ -532,6 +532,8 @@ And a PCB contains
 - CPU Registers
 - Memory Management Info
 
+![](https://scaler.com/topics/images/structure-of-process-control-block.webp)
+
 ### States of Process
 A process is in one of the following states: 
 
