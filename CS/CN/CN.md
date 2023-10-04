@@ -154,7 +154,61 @@ TCP 3-Way Handshake Process
 
 ![](https://media.geeksforgeeks.org/wp-content/uploads/handshake-1.png)
 
-continue from here -> https://www.geeksforgeeks.org/tcp-connection-establishment/
 
-and https://www.geeksforgeeks.org/computer-network-tutorials/
+![](https://media.geeksforgeeks.org/wp-content/uploads/net.png)
 
+TCP uses 4 timers 
+- Retransmission Timer (RTT)
+    A segment is retransmitted if RTO timer runs out before recieving Acknoledgement
+    - Measured (RTTm)
+    - Smoothed (RTTs)
+- Deviated
+- Persistent
+    - When there are too many unacknowledged packets on the network, congestion happens.
+    - This is where PT temporarily holds back new transmission until previously sent packages are acknowledged
+- Keep Alive Timer
+    - used to detect inactive connections
+- Time wait timer
+
+TCP can release connections 2 types of ways
+- Graceful release
+    - similar mechanism as SYN and ACK, but with FIN
+- Abrupt release
+    - RST segment is sent to close connection when a non-existent header is recieved
+
+When all the sequence numbers are used up, we can reuse the already closed ones. This is called wrap around concept.
+
+Wrap Around Time
+$$= (Total sequence number) / (Bandwidth)$$
+$$= (2^{32}) / (Bandwidth)$$
+
+Wrap around around time should always be > Life time
+
+
+How to reduce Wrap around time
+- Reduce the sequence numbers or 
+- Increase the bandwidth (possible) 
+
+## Responsibilities of a Transport Layer
+- The Process to Process Delivery
+    ![](https://media.geeksforgeeks.org/wp-content/uploads/20230502004748/image-289.png)
+- End-to-End Connection between Hosts
+![](https://media.geeksforgeeks.org/wp-content/uploads/20230502004913/EotE.png)
+- Multiplexing and Demultiplexing
+- Congestion Control
+- Data integrity and Error correction
+- Flow control
+
+### Protocols of TCP
+- [TCP](https://www.geeksforgeeks.org/what-is-transmission-control-protocol-tcp/)
+- [UDP](https://www.geeksforgeeks.org/user-datagram-protocol-udp/)
+- [SCTP](https://www.geeksforgeeks.org/sctp-full-form/)
+- [DCCP](https://www.geeksforgeeks.org/what-is-dccp-datagram-congestion-control-protocol/)
+- [ATP](https://www.geeksforgeeks.org/what-is-atp-appletalk-transaction-protocol/)
+- [FCP](https://www.geeksforgeeks.org/fcp-fibre-channel-protocol/)
+- [RDP](https://www.geeksforgeeks.org/principle-of-reliable-data-transfer-protocol/)
+- [RUDP](https://www.geeksforgeeks.org/reliable-user-datagram-protocol-rudp/)
+- [SST](https://www.geeksforgeeks.org/what-is-sst-structured-steam-transport/)
+- [SPX](https://www.geeksforgeeks.org/what-is-spx-sequenced-packet-exchange/)
+
+# Go through ⬆️ those
